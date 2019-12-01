@@ -9,7 +9,7 @@ body{
 #day, #hr, #min, #sec{
     display: inline-block;
     width:100px;
-    height:100px;
+    height:60px;
     /* background:red; */
     margin:5px;
 }
