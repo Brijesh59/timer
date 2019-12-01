@@ -8,8 +8,8 @@ body{
 }
 #day, #hr, #min, #sec{
     display: inline-block;
-    width:50px;
-    height:60px;
+    width:100px;
+    height:100px;
     /* background:red; */
     margin:5px;
 }
