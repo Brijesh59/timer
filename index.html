@@ -1,72 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Timer</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com"> 
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;800&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div id="container">
-        <div id="date_container">
-            <div id="day" class="block">
-                0 
-                <div class="text">DAYS</div>
-            </div> 
-            <div id="hr" class="block">
-                0
-                <div class="text">HRS</div>
-            </div> 
-            <div id="min" class="block">
-                0 
-            </div> 
-            <div id="sec" class="block">
-                0 
-            </div> 
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="date_container">
+        <div id="year" class="block">
+          0
+          <div class="text">YEARS</div>
         </div>
+        <div id="month" class="block">
+          0
+          <div class="text">MONTHS</div>
+        </div>
+        <div id="day" class="block">
+          0
+          <div class="text">DAYS</div>
+        </div>
+      </div>
+      <div class="time_container">
+        <div id="hr" class="block">
+          0
+          <div class="text">HRS</div>
+        </div>
+        <div id="min" class="block">0</div>
+        <div id="sec" class="block">0</div>
+      </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/duration.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/utc.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/timezone.js"></script>
     <script>
-        Date.prototype.isValid = function () {
-            return this.getTime() === this.getTime();
+      dayjs.extend(window.dayjs_plugin_duration);
+      dayjs.extend(window.dayjs_plugin_utc);
+      dayjs.extend(window.dayjs_plugin_timezone);
+
+      function getTimeDifference(startDate) {
+        // Convert the start date to a dayjs object
+        const start = dayjs(startDate);
+
+        // Get the current date and time
+        const now = dayjs();
+
+        // Calculate the difference in milliseconds
+        const duration = dayjs.duration(now.diff(start));
+
+        // Extract the individual components
+        const years = duration.years();
+        const months = duration.months();
+        const days = duration.days();
+        const hours = duration.hours();
+        const minutes = duration.minutes();
+        const seconds = duration.seconds();
+
+        // Return the time difference as an object
+        return {
+          years,
+          months,
+          days,
+          hours,
+          minutes,
+          seconds,
         };
-        let timer = setInterval(function() {
-        let lastMeetDate = new Date("June 17, 2019 18:37:25").getTime();
-        let todayDate = new Date().getTime();
-        let distance = 0;
+      }
 
-        if(window.location.search){
-            const search = window.location.search.replace("?start=", "").replace(/%20/g, " ").replace(/%22/g, "")
-            const startDate = new Date(search)
-            if(startDate.isValid()){
-                lastMeetDate = startDate.getTime()
-            }
-        }
-        if(todayDate > lastMeetDate){
-            distance = todayDate - lastMeetDate;
-        }
-        else{
-            distance = lastMeetDate - todayDate;
-        }
+      const timer = setInterval(function () {
+        const lastMeetDate = new Date("June 17, 2019 18:37:25").getTime();
 
-        // Time calculations for days, hours, minutes and seconds
-        // let months = Math.floor(distance / (1000 * 60 * 60 * 24 * 30));
-        let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        // let milliSeconds = (days * 3600 +  hours * 60 + seconds) * 10
+        const { years, months, days, hours, minutes, seconds } =
+          getTimeDifference(lastMeetDate);
 
-        // Display the result in the element with id="demo"
-        document.getElementById("day").innerHTML = days + `<div class="text">DAYS</div>`
-        document.getElementById("hr").innerHTML = hours + `<div class="text">HOURS</div>`
-        document.getElementById("min").innerHTML = minutes + `<div class="text">MINUTES</div>`
-        document.getElementById("sec").innerHTML = seconds + `<div class="text">SECONDS</div>`
+        document.getElementById("year").innerHTML =
+          years + `<div class="text">YEARS</div>`;
+        document.getElementById("month").innerHTML =
+          months + `<div class="text">MONTHS</div>`;
+        document.getElementById("day").innerHTML =
+          days + `<div class="text">DAYS</div>`;
+        document.getElementById("hr").innerHTML =
+          hours + `<div class="text">HOURS</div>`;
+        document.getElementById("min").innerHTML =
+          minutes + `<div class="text">MINUTES</div>`;
+        document.getElementById("sec").innerHTML =
+          seconds + `<div class="text">SECONDS</div>`;
       }, 1000);
-      window.onload = timer  
+
+      window.onload = timer;
     </script>
-</body>
+  </body>
 </html>
